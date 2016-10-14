@@ -12,6 +12,7 @@
  */
 package assignment4;
 
+import java.util.HashSet;
 import java.util.List;
 
 /* see the PDF for descriptions of the methods and fields in this class
@@ -24,7 +25,8 @@ public abstract class Critter {
 	private static String myPackage;
 	private	static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
-
+	private static HashSet<Critter> critters = new HashSet<Critter>();
+	
 	// Gets the package name.  This assumes that Critter and its subclasses are all in the same package.
 	static {
 		myPackage = Critter.class.getPackage().toString().split(" ")[1];
@@ -167,10 +169,46 @@ public abstract class Critter {
 	 * Clear the world of all critters, dead and alive
 	 */
 	public static void clearWorld() {
+		
 	}
 	
 	public static void worldTimeStep() {
+		
 	}
 	
-	public static void displayWorld() {}
+
+	public static void displayWorld() {
+		char[][] critterChars = new char[Params.world_width][Params.world_height];
+		
+		
+		for (int i = 0; i < critterChars.length; i++) {
+			for (int j = 0; j < critterChars[0].length; j++) {
+				critterChars[i][j] = ' ';
+			}
+		}
+		for (Critter c : critters){
+			critterChars[c.x_coord][c.y_coord] = c.toString().charAt(0);
+		}	
+		
+		System.out.print("+");
+		for (int i = 0; i <Params.world_width; i++){
+			System.out.print("-");
+		}
+		System.out.println("+");
+	
+		for (int i = 0; i < Params.world_height; i++){
+			System.out.print("|");
+			for (int j = 0; j < Params.world_width; j++){
+				System.out.print(critterChars[j][i]);
+			}
+			System.out.println("|");
+		}
+		
+		System.out.print("+");
+		for (int i = 0; i <Params.world_width; i++){
+			System.out.print("-");
+		}
+		System.out.println("+");
+		
+	}
 }
