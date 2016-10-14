@@ -69,7 +69,12 @@ public class Main {
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
         
-        Critter.displayWorld();
+        Controller controller = new Controller(kb);
+        
+        
+        while (!controller.quit){
+        	controller.promptInput();
+        }
         
         /* Write your code above */
         System.out.flush();
