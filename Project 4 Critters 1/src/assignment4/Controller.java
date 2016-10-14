@@ -12,6 +12,10 @@ public class Controller {
 		keyboard = kb;
 	}
 
+	/*
+	 * Prompts the user for a command through Scanner
+	 * Handles the various commands
+	 */
 	public void promptInput(){
 		System.out.print("critters>");
 		String input = keyboard.nextLine();
