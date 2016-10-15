@@ -35,7 +35,9 @@ public class Controller {
 		case "show":
 			Critter.displayWorld();
 			break;
-			
+		case "seed":
+			Critter.setSeed(Long.parseLong(commands[1]));
+			break;
 		case "step":
 			int count = 1;
 			if (commands.length > 1){

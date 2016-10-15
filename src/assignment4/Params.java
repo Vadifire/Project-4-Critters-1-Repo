@@ -6,6 +6,7 @@ package assignment4;
  */
 
 public class Params {
+	public final static boolean DEBUG = true;
 	public final static int world_width = 30;
 	public final static int world_height = 8;
 	public final static int walk_energy_cost = 2;
