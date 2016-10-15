@@ -1,7 +1,6 @@
 package assignment4;
 /* CRITTERS <MyClass.java>
  * EE422C Project 4 submission by
- * Replace <...> with your actual data.
  * <Ahsan Khan>
  * <ajk2723>
  * <16445>

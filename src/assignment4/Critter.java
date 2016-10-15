@@ -125,6 +125,8 @@ public abstract class Critter {
 		}
 		offspring.energy = this.energy / 2;
 		energy = energy / 2 + energy % 2;
+		offspring.x_coord = x_coord;
+		offspring.y_coord = y_coord;
 		offspring.move(direction);
 		babies.add(offspring);
 	}
@@ -285,11 +287,11 @@ public abstract class Critter {
 	 */
 	public static void worldTimeStep() {
 
-		for (Critter c : critters) { // all do time step
+		for (Critter c : critters) { // Each critter does their time step
 			c.doTimeStep();
 		}
 
-		for (Critter c : critters) {
+		for (Critter c : critters) { //Add a conflict for each critter in the same location
 			for (Critter other : critters) {
 				if (c != other && c.x_coord == other.x_coord && c.y_coord == other.y_coord) {
 					conflicts.add(new Conflict(c, other));
@@ -297,25 +299,25 @@ public abstract class Critter {
 			}
 		}
 
-		while (!conflicts.isEmpty()) {
+		while (!conflicts.isEmpty()) { //Solve all conflicts
 			conflicts.poll().resolveConflict();
 		}
 
-		Iterator<Critter> it = critters.iterator();
-		while (it.hasNext()) { // remove dead critters
-			Critter c = it.next();
-			c.energy -= Params.rest_energy_cost;
-			if (c.getEnergy() <= 0) {
-				it.remove();
-			}
-		}
-
-		for (int i = 0; i < Params.refresh_algae_count; i++) {
+		/*for (int i = 0; i < Params.refresh_algae_count; i++) {
 			Algae a = new Algae();
 			a.setEnergy(Params.start_energy);
 			a.setX_coord(Critter.getRandomInt(Params.world_width - 1));
 			a.setY_coord(Critter.getRandomInt(Params.world_height - 1));
 			critters.add(a);
+		}*/
+		
+		Iterator<Critter> it = critters.iterator();
+		while (it.hasNext()) { // cull the dead critters
+			Critter c = it.next();
+			c.energy -= Params.rest_energy_cost;
+			if (c.getEnergy() <= 0) {
+				it.remove();
+			}
 		}
 
 		critters.addAll(babies);
