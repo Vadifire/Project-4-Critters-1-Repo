@@ -42,6 +42,7 @@ public class Controller {
 				count = Integer.parseInt(commands[1]);
 			}
 			while (count > 0){
+				count--;
 				Critter.worldTimeStep();
 			}
 			break;

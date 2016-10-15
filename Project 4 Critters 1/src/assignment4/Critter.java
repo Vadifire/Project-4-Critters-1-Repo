@@ -12,7 +12,10 @@
  */
 package assignment4;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /* see the PDF for descriptions of the methods and fields in this class
@@ -24,8 +27,10 @@ public abstract class Critter {
 	private static String myPackage;
 	private static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
-	private static HashSet<Critter> critters = new HashSet<Critter>();
+	public static HashSet<Critter> critters = new HashSet<Critter>();
+	public static LinkedList<Conflict> conflicts = new LinkedList<Conflict>();
 
+	
 	// Gets the package name. This assumes that Critter and its subclasses are
 	// all in the same package.
 	static {
@@ -50,7 +55,7 @@ public abstract class Critter {
 		return "";
 	}
 
-	private int energy = 0;
+	private int energy = Params.start_energy;
 
 	protected int getEnergy() {
 		return energy;
@@ -59,8 +64,7 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 
-	protected final void walk(int direction) {
-		energy -= Params.walk_energy_cost;
+	protected final void move(int direction){
 		switch (direction) { //Alter coords based on direction
 		case 0:
 			x_coord++;
@@ -104,12 +108,26 @@ public abstract class Critter {
 			x_coord = Params.world_width - 1;
 		}
 	}
+	
+	protected final void walk(int direction) {
+		move(direction);
+		energy -= Params.walk_energy_cost;
+	}
 
 	protected final void run(int direction) {
-
+		move(direction);
+		move(direction);
+		energy -= Params.run_energy_cost;
 	}
 
 	protected final void reproduce(Critter offspring, int direction) {
+		if (energy < Params.min_reproduce_energy){
+			return;
+		}
+		offspring.energy = this.energy/2;
+		energy = energy/2 + energy%2;
+		offspring.move(direction);
+		babies.add(offspring);
 	}
 
 	public abstract void doTimeStep();
@@ -128,6 +146,7 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
+		
 	}
 
 	/**
@@ -229,7 +248,11 @@ public abstract class Critter {
 	 * Clear the world of all critters, dead and alive
 	 */
 	public static void clearWorld() {
-
+		Iterator<Critter> it = critters.iterator();
+		while (it.hasNext()){
+			Critter c = it.next();
+			it.remove();
+		}
 	}
 
 	/*
@@ -238,15 +261,36 @@ public abstract class Critter {
 	 * Finally, checks for deaths that occur due to loss of energy
 	 */
 	public static void worldTimeStep() {
-		for (Critter c : critters) {
+		
+		for (Critter c : critters) { //all do time step
 			c.doTimeStep();
 		}
-		// TODO: resolve conflicts
+		
+		for (Critter c : critters){
+			for (Critter other : critters){
+				if (c != other && c.x_coord == other.x_coord && c.y_coord == other.y_coord){
+					conflicts.add(new Conflict(c, other));
+				}
+			}
+		}
+		
+		while (!conflicts.isEmpty()){
+			conflicts.poll().resolveConflict();
+		}
+		
+		Iterator<Critter> it = critters.iterator();
+		while (it.hasNext()){ //remove dead critters
+			Critter c = it.next();
+			c.energy-=Params.rest_energy_cost;
+			if (c.getEnergy() <= 0){
+				it.remove();
+			}
+		}
+		
+		
 	}
 
-	/*
-	 * 
-	 */
+	
 	public static void displayWorld() {
 		char[][] critterChars = new char[Params.world_width][Params.world_height];
 
@@ -280,4 +324,37 @@ public abstract class Critter {
 		System.out.println("+");
 
 	}
+	
+	static class Conflict {
+		Critter m1, m2;
+		public Conflict(Critter m1, Critter m2){
+			this.m1 = m1;
+			this.m2 = m2;
+		}
+		
+		public void resolveConflict(){
+			if (m1.energy < 1 || m2.energy < 1){
+				return;
+			}
+			if (m1.x_coord != m2.x_coord || m1.y_coord != m2.y_coord){ //Make sure that m1 and m2 are still in the same location
+				return;
+			}
+			boolean m1Fight = m1.fight(m2.toString());
+			boolean m2Fight = m2.fight(m1.toString());
+			if (m1.x_coord != m2.x_coord || m1.y_coord != m2.y_coord){ //Make sure that m1 and m2 are still in the same location
+				return;
+			}
+			int roll1 = m1Fight ? m1.getRandomInt(m1.energy) : 0;
+			int roll2 = m2Fight ? m2.getRandomInt(m2.energy) : 0;
+			if (roll1 > roll2){
+				m1.energy += m2.energy/2;
+				m2.energy=0;
+			}
+			if (roll2 > roll1){
+				m2.energy += m1.energy/2;
+				m1.energy = 0;
+			}
+		}
+	}
+
 }
