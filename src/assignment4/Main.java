@@ -71,9 +71,6 @@ public class Main {
         
         Controller controller = new Controller(kb);
         
-        for (int i = 0; i < 2; i++)
-        	Critter.critters.add(new Craig());
-       
         
         while (!controller.quit){
         	controller.promptInput();

@@ -145,7 +145,22 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
-
+		try {
+			Critter c = (Critter) Class.forName(myPackage + "." + critter_class_name).newInstance();
+			c.x_coord = Critter.getRandomInt(Params.world_width-1);
+			c.y_coord = Critter.getRandomInt(Params.world_height-1);
+			c.energy = Params.start_energy;
+			critters.add(c);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -158,7 +173,16 @@ public abstract class Critter {
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		List<Critter> result = new java.util.ArrayList<Critter>();
-
+		for(Critter c : critters){
+			try {
+				if (Class.forName(myPackage + "." + critter_class_name).isInstance(c)){
+					result.add(c);
+				}
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return result;
 	}
 
@@ -295,6 +319,7 @@ public abstract class Critter {
 		}
 
 		critters.addAll(babies);
+		babies.clear();
 	}
 
 	public static void displayWorld() {
@@ -343,18 +368,7 @@ public abstract class Critter {
 			if (m1.energy < 1 || m2.energy < 1) {
 				return;
 			}
-			if (m1.x_coord != m2.x_coord || m1.y_coord != m2.y_coord) { // Make
-																		// sure
-																		// that
-																		// m1
-																		// and
-																		// m2
-																		// are
-																		// still
-																		// in
-																		// the
-																		// same
-																		// location
+			if (m1.x_coord != m2.x_coord || m1.y_coord != m2.y_coord) { // Make sure that m1 and m2 are still in the same location
 				return;
 			}
 			int x = m1.x_coord;
@@ -362,18 +376,7 @@ public abstract class Critter {
 			int preEnergy = m1.energy;
 			boolean m1Fight = m1.fight(m2.toString());
 			boolean m2Fight = m2.fight(m1.toString());
-			if (m1.x_coord != m2.x_coord || m1.y_coord != m2.y_coord) { // Make
-																		// sure
-																		// that
-																		// m1
-																		// and
-																		// m2
-																		// are
-																		// still
-																		// in
-																		// the
-																		// same
-																		// location
+			if (m1.x_coord != m2.x_coord || m1.y_coord != m2.y_coord) { // Make sure that m1 and m2 are still in the same location
 				return;
 			}
 			if (m1.x_coord != x || m1.y_coord != y) {
