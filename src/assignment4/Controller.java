@@ -1,5 +1,6 @@
 package assignment4;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -43,8 +44,28 @@ public class Controller {
 			if(commands.length > 1){
 				try {
 					List<Critter> instances = Critter.getInstances(commands[1]);
-					
-					//TODO what on earth are we supposed to do here
+					if (instances.size() < 1)
+						return;
+					Critter c = instances.get(0);
+					Class<?>[] types = {List.class};
+					try {
+						c.getClass().getMethod("runStats",types).invoke(c,instances);
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoSuchMethodException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}			
 				} catch (InvalidCritterException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
