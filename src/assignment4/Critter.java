@@ -62,6 +62,8 @@ public abstract class Critter {
 
 	private int x_coord;
 	private int y_coord;
+	
+	private boolean hasMoved;
 
 	protected final void move(int direction) {
 		switch (direction) { // Alter coords based on direction
@@ -109,14 +111,20 @@ public abstract class Critter {
 	}
 
 	protected final void walk(int direction) {
-		move(direction);
 		energy -= Params.walk_energy_cost;
+		if (hasMoved) //Can only move once per time step.
+			return;
+		hasMoved = true;
+		move(direction);
 	}
 
 	protected final void run(int direction) {
-		move(direction);
-		move(direction);
 		energy -= Params.run_energy_cost;
+		if (hasMoved) //Can only move once per time step.
+			return;
+		hasMoved = true;
+		move(direction);
+		move(direction);
 	}
 
 	protected final void reproduce(Critter offspring, int direction) {
@@ -149,8 +157,8 @@ public abstract class Critter {
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
 		try {
 			Critter c = (Critter) Class.forName(myPackage + "." + critter_class_name).newInstance();
-			c.x_coord = Critter.getRandomInt(Params.world_width-1);
-			c.y_coord = Critter.getRandomInt(Params.world_height-1);
+			c.x_coord = Critter.getRandomInt(Params.world_width);
+			c.y_coord = Critter.getRandomInt(Params.world_height);
 			c.energy = Params.start_energy;
 			critters.add(c);
 		} catch (ClassNotFoundException e) {
@@ -288,6 +296,7 @@ public abstract class Critter {
 	public static void worldTimeStep() {
 
 		for (Critter c : critters) { // Each critter does their time step
+			c.hasMoved = false;
 			c.doTimeStep();
 		}
 
@@ -306,10 +315,13 @@ public abstract class Critter {
 		/*for (int i = 0; i < Params.refresh_algae_count; i++) {
 			Algae a = new Algae();
 			a.setEnergy(Params.start_energy);
-			a.setX_coord(Critter.getRandomInt(Params.world_width - 1));
-			a.setY_coord(Critter.getRandomInt(Params.world_height - 1));
+			a.setX_coord(Critter.getRandomInt(Params.world_width));
+			a.setY_coord(Critter.getRandomInt(Params.world_height));
 			critters.add(a);
 		}*/
+		
+		critters.addAll(babies);
+		babies.clear();
 		
 		Iterator<Critter> it = critters.iterator();
 		while (it.hasNext()) { // cull the dead critters
@@ -319,9 +331,6 @@ public abstract class Critter {
 				it.remove();
 			}
 		}
-
-		critters.addAll(babies);
-		babies.clear();
 	}
 
 	public static void displayWorld() {
@@ -358,7 +367,7 @@ public abstract class Critter {
 
 	}
 
-	static class Conflict {
+	private static class Conflict {
 		Critter m1, m2;
 
 		public Conflict(Critter m1, Critter m2) {
@@ -367,27 +376,51 @@ public abstract class Critter {
 		}
 
 		public void resolveConflict() {
+			
+			//System.out.println("Attempting to resolve conflict...");
 			if (m1.energy < 1 || m2.energy < 1) {
 				return;
 			}
 			if (m1.x_coord != m2.x_coord || m1.y_coord != m2.y_coord) { // Make sure that m1 and m2 are still in the same location
 				return;
 			}
-			int x = m1.x_coord;
-			int y = m1.y_coord;
+			int oldX_m1 = m1.x_coord;
+			int oldY_m1 = m1.y_coord;
+			int oldX_m2 = m2.x_coord;
+			int oldY_m2 = m2.y_coord;
 			int preEnergy = m1.energy;
 			boolean m1Fight = m1.fight(m2.toString());
 			boolean m2Fight = m2.fight(m1.toString());
+			
+			for (Critter c : critters){ //Check to see if m1 has run into a critter at potential new location
+				if ((c.x_coord == m1.x_coord || c.y_coord == m1.y_coord) && c != m1){
+					m1.x_coord = oldX_m1;
+					m1.y_coord = oldY_m1;
+					//No energy refund for failed attempt to move.
+				}
+			}
+			
 			if (m1.x_coord != m2.x_coord || m1.y_coord != m2.y_coord) { // Make sure that m1 and m2 are still in the same location
 				return;
 			}
-			if (m1.x_coord != x || m1.y_coord != y) {
-				m1.x_coord = x;
-				m1.y_coord = y;
-				m1.energy = preEnergy;
+			if (m1.x_coord != oldX_m1 || m1.y_coord != oldY_m1) { //In this case, m1 and m2 have both moved.
+				m1.x_coord = oldX_m1;
+				m1.y_coord = oldY_m1;
+				m1.energy = preEnergy; //Cancel m1 movement
 				return;
 			}
+			for (Critter c : critters){ //Check to see if m2 has run into a critter at potential new location
+				if ((c.x_coord == m2.x_coord || c.y_coord == m1.y_coord) && c != m2){
+					m2.x_coord = oldX_m2;
+					m2.y_coord = oldY_m2;
+					//No energy refund for failed attempt to move.
+				}
+			}
 
+			if (m1.energy < 1 || m2.energy < 1) { //Must be checked in case failed movement due to other critter
+				return;
+			}
+			
 			int roll1 = m1Fight ? Critter.getRandomInt(m1.energy) : 0;
 			int roll2 = m2Fight ? Critter.getRandomInt(m2.energy) : 0;
 			if (roll1 > roll2) {
@@ -398,6 +431,7 @@ public abstract class Critter {
 				m2.energy += m1.energy / 2;
 				m1.energy = 0;
 			}
+			//System.out.println("Conflict resolved.");
 		}
 	}
 
