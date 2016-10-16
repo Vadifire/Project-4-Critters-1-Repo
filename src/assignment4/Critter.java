@@ -1,15 +1,15 @@
 /* CRITTERS Critter.java
  * EE422C Project 4 submission by
- * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
- * <Student1 5-digit Unique No.>
- * <Student2 Name>
- * <Student2 EID>
- * <Student2 5-digit Unique No.>
+ * <Ahsan Khan>
+ * <ajk2723>
+ * <16445>
+ * <Cedric Debelle>
+ * <cfd363>
+ * <16445>
  * Slip days used: <0>
  * Fall 2016
  */
+
 package assignment4;
 
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ public abstract class Critter {
 	private static String myPackage;
 	private static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
-	public static HashSet<Critter> critters = new HashSet<Critter>();
-	public static LinkedList<Conflict> conflicts = new LinkedList<Conflict>();
+	private static HashSet<Critter> critters = new HashSet<Critter>();
+	private static LinkedList<Conflict> conflicts = new LinkedList<Conflict>();
 
 	// Gets the package name. This assumes that Critter and its subclasses are
 	// all in the same package.
@@ -312,13 +312,13 @@ public abstract class Critter {
 			conflicts.poll().resolveConflict();
 		}
 
-		/*for (int i = 0; i < Params.refresh_algae_count; i++) {
+		for (int i = 0; i < Params.refresh_algae_count; i++) {
 			Algae a = new Algae();
 			a.setEnergy(Params.start_energy);
 			a.setX_coord(Critter.getRandomInt(Params.world_width));
 			a.setY_coord(Critter.getRandomInt(Params.world_height));
 			critters.add(a);
-		}*/
+		}
 		
 		critters.addAll(babies);
 		babies.clear();

@@ -1,4 +1,3 @@
-package assignment4; // cannot be in default package
 /* CRITTERS Main.java
  * EE422C Project 4 submission by
  * <Ahsan Khan>
@@ -10,6 +9,8 @@ package assignment4; // cannot be in default package
  * Slip days used: <0>
  * Fall 2016
  */
+
+package assignment4; // cannot be in default package
 
 import java.util.Scanner;
 import java.io.*;

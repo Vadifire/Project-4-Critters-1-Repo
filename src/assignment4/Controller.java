@@ -1,3 +1,15 @@
+/* CRITTERS Controller.java
+ * EE422C Project 4 submission by
+ * <Ahsan Khan>
+ * <ajk2723>
+ * <16445>
+ * <Cedric Debelle>
+ * <cfd363>
+ * <16445>
+ * Slip days used: <0>
+ * Fall 2016
+ */
+
 package assignment4;
 
 import java.lang.reflect.InvocationTargetException;
@@ -27,10 +39,13 @@ public class Controller {
 		for (String command : commands){
 			command.trim();
 		}
-		
-		//TODO: handle exceptions
+
 		
 		switch (commands[0]){
+		case "s": //TODO: REMOVE
+			Critter.worldTimeStep();
+			Critter.displayWorld();
+			break;
 		case "quit":
 			quit = true;
 			break;

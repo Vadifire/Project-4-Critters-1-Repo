@@ -1,3 +1,15 @@
+/* CRITTERS Params.java
+ * EE422C Project 4 submission by
+ * <Ahsan Khan>
+ * <ajk2723>
+ * <16445>
+ * <Cedric Debelle>
+ * <cfd363>
+ * <16445>
+ * Slip days used: <0>
+ * Fall 2016
+ */
+
 package assignment4;
 
 /*
@@ -16,6 +28,6 @@ public class Params {
 	public final static int refresh_algae_count = 10;
 
 	public static final int photosynthesis_energy_amount = 1;
-	public static final int start_energy = 300;
+	public static final int start_energy = 100;
 
 }

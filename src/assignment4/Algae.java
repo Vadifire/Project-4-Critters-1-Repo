@@ -1,5 +1,5 @@
 package assignment4;
-/* CRITTERS Main.java
+/* CRITTERS Algae.java
  * EE422C Project 4 submission by
  * <Ahsan Khan>
  * <ajk2723>

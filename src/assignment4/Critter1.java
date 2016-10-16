@@ -1,0 +1,50 @@
+/* CRITTERS Critter1 (Cedric)
+ * EE422C Project 4 submission by
+ * <Ahsan Khan>
+ * <ajk2723>
+ * <16445>
+ * <Cedric Debelle>
+ * <cfd363>
+ * <16445>
+ * Slip days used: <0>
+ * Fall 2016
+ */
+
+package assignment4;
+
+/*
+ * Critter1 is scaredy cat. It always tries to run away from fights with non-Algae critters.
+ * Scaredy cat has to make sure its able to run from foes, so it prefers to sit still, waiting for Algae to spawn.
+ * However, if scaredy is low on energy (20% of start), it will grow hungry and risk searching for Algae
+ */
+public class Critter1 extends Critter{
+
+	@Override
+	public String toString() { return "S"; }
+		
+	@Override
+	public void doTimeStep() {
+		
+		if (getEnergy() >= Params.min_reproduce_energy) { //Always reproduce if it can
+			Critter1 child = new Critter1();
+			reproduce(child, Critter.getRandomInt(8));
+		}
+		
+		if (getEnergy() <= Params.start_energy/5){ //Forced to take risk and search for food
+			walk(Critter.getRandomInt(8)); //Frantically walks around.
+		}
+	}
+
+	public boolean fight(String opponent) { 
+		if (opponent.equals("@"))
+			return true; //Only tries to take on algae
+		run(Critter.getRandomInt(8));
+		return false;
+	}
+
+	public static void runStats(java.util.List<Critter> critter1s) {
+		System.out.println("There are currently "+critter1s.size()+" timid little scaredy cats!");
+	}
+
+
+}
