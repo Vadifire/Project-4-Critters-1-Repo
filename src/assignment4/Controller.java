@@ -26,7 +26,7 @@ public class Controller {
 		keyboard = kb;
 	}
 
-	/*
+	/**
 	 * Prompts the user for a command through Scanner Handles the various
 	 * commands
 	 */

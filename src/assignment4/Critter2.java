@@ -37,6 +37,12 @@ public class Critter2 extends Critter{
 	}
 	
 	@Override
+	/**
+	 * This method is intended to be called every worldTimeStep. When Critter2 first
+	 * spawns, moves 10 times. If Critter2 finds that it is more likely to find food
+	 * than a threat, it will have a preference to move. It also reproduces when it has
+	 * more than Params.start_energy.
+	 */
 	public void doTimeStep() {
 		if (totalSteps < 10){ //Early on in life, Critter 2 will explore the world
 			hasWalked = true;
@@ -54,7 +60,7 @@ public class Critter2 extends Critter{
 		}
 		
 		
-		if (getEnergy() >= Params.min_reproduce_energy+energyToFight) { //Reproduce if can and will be left strong enough to fight.
+		if (getEnergy() > Params.start_energy) { //Reproduces if Critter2 is doing well.
 			Critter2 child = new Critter2();
 			child.energyToFight = energyToFight -10 + Critter.getRandomInt(20); //+/- 10 energyToFight from parent
 			reproduce(child, Critter.getRandomInt(8));
@@ -62,6 +68,10 @@ public class Critter2 extends Critter{
 		
 	}
 
+	/**
+	 * Critter2 will always fight Algae or if it is forced to (has already moved).
+	 * Critter2 will choose to run if its energy is lower than "energyToFight"
+	 */
 	public boolean fight(String opponent) { 
 		if (opponent.equals("@") || opponent.equals("S")){
 			foodFound++; 

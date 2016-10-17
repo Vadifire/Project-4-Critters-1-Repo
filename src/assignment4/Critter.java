@@ -65,6 +65,10 @@ public abstract class Critter {
 
 	private boolean hasMoved;
 
+	/**
+	 * Moves the critter 1 unit in a direction
+	 * @param direction to move in
+	 */
 	protected final void move(int direction) {
 		switch (direction) { // Alter coords based on direction
 		case 0:
@@ -110,6 +114,11 @@ public abstract class Critter {
 		}
 	}
 
+	/**
+	 * Calls the move function iff the Critter has not moved yet this time step.
+	 * Also expends Params.walk_energy_cost
+	 * @param direction to walk in
+	 */
 	protected final void walk(int direction) {
 		energy -= Params.walk_energy_cost;
 		if (hasMoved) // Can only move once per time step.
@@ -118,6 +127,11 @@ public abstract class Critter {
 		move(direction);
 	}
 
+	/**
+	 * Calls the move function twice iff the Critter has not moved yet this time step.
+	 * Also expends Params.run.energy_cost
+	 * @param direction to run in
+	 */
 	protected final void run(int direction) {
 		energy -= Params.run_energy_cost;
 		if (hasMoved) // Can only move once per time step.
@@ -127,6 +141,12 @@ public abstract class Critter {
 		move(direction);
 	}
 
+	/**
+	 * Creates a new baby offspring and puts it 1 unit away from the parent given a direction
+	 * Babies are not added to the critters HashSet until the next time step.
+	 * @param offspring to produce
+	 * @param direction to eject offspring in
+	 */
 	protected final void reproduce(Critter offspring, int direction) {
 		if (energy < Params.min_reproduce_energy) {
 			return;
@@ -286,7 +306,7 @@ public abstract class Critter {
 		}
 	}
 
-	/*
+	/**
 	 * Iterates through all critters, performing doTimeStep() for each of them
 	 * Then resolves conflicts between multiple critters with the same
 	 * coordinates Finally, checks for deaths that occur due to loss of energy
@@ -332,6 +352,11 @@ public abstract class Critter {
 		}
 	}
 
+	/**
+	 * Prints out a grid filled with all critter, using their toString characters
+	 * as their representation. NOTE: If two critters have the same coordinates,
+	 * only one arbitrary critter is shown.
+	 */
 	public static void displayWorld() {
 		char[][] critterChars = new char[Params.world_width][Params.world_height];
 
@@ -366,6 +391,12 @@ public abstract class Critter {
 
 	}
 
+	/**
+	 * @author Cedric Debelle, Ahsan Khan
+	 * Conflict contains the two members involved in the conflict,
+	 * as well as describing the procedure to handle a conflict.
+	 * 
+	 */
 	private static class Conflict {
 		Critter m1, m2;
 
@@ -374,6 +405,11 @@ public abstract class Critter {
 			this.m2 = m2;
 		}
 
+		/**
+		 * Handles the case when two Critters occupy the same space
+		 * At the end of this call, only one of the two members can remain in the
+		 * same coordinates. The other member even dies or runs to a new location.
+		 */
 		public void resolveConflict() {
 
 			// System.out.println("Attempting to resolve conflict...");

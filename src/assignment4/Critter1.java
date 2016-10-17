@@ -23,8 +23,13 @@ public class Critter1 extends Critter{
 	public String toString() { return "1"; }
 		
 	@Override
+	/**
+	 * This method is intended to be called every worldTimeStep. If Critter1 has
+	 * the energy to reproduce, it will. Critter1 will move if it drops below 20%
+	 * of Params.start_energy
+	 */
 	public void doTimeStep() {
-		
+	
 		if (getEnergy() >= Params.min_reproduce_energy) { //Always reproduce if it can
 			Critter1 child = new Critter1();
 			reproduce(child, Critter.getRandomInt(8));
@@ -35,6 +40,9 @@ public class Critter1 extends Critter{
 		}
 	}
 
+	/**
+	 * Critter1 will only fight algae.
+	 */
 	public boolean fight(String opponent) { 
 		if (opponent.equals("@"))
 			return true; //Only tries to take on algae
@@ -42,6 +50,10 @@ public class Critter1 extends Critter{
 		return false;
 	}
 
+	/**
+	 * Prints out how many Critter1s are alive.
+	 * @param critter1s, a list of all Critter1s currently alive.
+	 */
 	public static void runStats(java.util.List<Critter> critter1s) {
 		System.out.println("There are currently "+critter1s.size()+" timid little scaredy cats!");
 	}
