@@ -1,3 +1,15 @@
+/* CRITTERS Critter3.java
+ * EE422C Project 4 submission by
+ * <Ahsan Khan>
+ * <ajk2723>
+ * <16445>
+ * <Cedric Debelle>
+ * <cfd363>
+ * <16445>
+ * Slip days used: <0>
+ * Fall 2016
+ */
+
 package assignment4;
 
 public class Critter3 extends Critter {
@@ -17,20 +29,31 @@ public class Critter3 extends Critter {
 		return "3";
 	}
 
-	@Override
+	/**
+	 * Method to be called by worldTimeStep,
+	 * makes Critter3 walk in one of
+	 * the three upward directions
+	 */
 	public void doTimeStep() {
 		int direction = 2;
 		int sideStep = (Critter.getRandomInt(1) == 0) ? -1 : 1;
+		sideStep = (Critter.getRandomInt(1) == 0) ? sideStep : 0;
 		this.walk(direction + sideStep);
 	}
 
-	@Override
+	/**
+	 * The fight method for Critter 3, returns true if fighting or false if running
+	 */
 	public boolean fight(String opponent) {
 		if(opponent.equals("@") || opponent.equals(this.toString())) return true;
 		else this.run(2);
 		return false;
 	}
 	
+	/**
+	 * Prints out the number of Critter3 instances currently alive
+	 * @param critters the list of Critter3 instances
+	 */
 	public static void runStats(java.util.List<Critter> critters) {
 		System.out.println("There are: " + critters.size() + " Critter 3s vying for a spot at the top.");
 	}

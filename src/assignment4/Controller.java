@@ -21,14 +21,18 @@ public class Controller {
 	public boolean quit;
 	Scanner keyboard;
 
+	/**
+	 * Creates a new Controller class with the given Scanner
+	 * @param kb the Scanner from which commands will be read
+	 */
 	public Controller(Scanner kb) {
 		quit = false;
 		keyboard = kb;
 	}
 
 	/**
-	 * Prompts the user for a command through Scanner Handles the various
-	 * commands
+	 * Prompts the user for a command through Scanner 
+	 * Handles the various commands
 	 */
 	public void promptInput() {
 		System.out.print("critters>");
