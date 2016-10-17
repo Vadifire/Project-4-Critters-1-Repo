@@ -20,99 +20,86 @@ public class Controller {
 
 	public boolean quit;
 	Scanner keyboard;
-	
-	public Controller (Scanner kb){
+
+	public Controller(Scanner kb) {
 		quit = false;
 		keyboard = kb;
 	}
 
 	/*
-	 * Prompts the user for a command through Scanner
-	 * Handles the various commands
+	 * Prompts the user for a command through Scanner Handles the various
+	 * commands
 	 */
-	public void promptInput(){
+	public void promptInput() {
 		System.out.print("critters>");
 		String input = keyboard.nextLine();
-		
-		String[] commands = input.split(" ");
-		
-		for (String command : commands){
-			command.trim();
-		}
 
-		
-		switch (commands[0]){
-		case "s": //TODO: REMOVE
-			Critter.worldTimeStep();
-			Critter.displayWorld();
-			break;
-		case "quit":
-			quit = true;
-			break;
-		case "show":
-			Critter.displayWorld();
-			break;
-		case "seed":
-			Critter.setSeed(Long.parseLong(commands[1]));
-			break;
-		case "stats":
-			if(commands.length > 1){
-				try {
-					List<Critter> instances = Critter.getInstances(commands[1]);
-					if (instances.size() < 1)
-						return;
-					Critter c = instances.get(0);
-					Class<?>[] types = {List.class};
-					try {
-						c.getClass().getMethod("runStats",types).invoke(c,instances);
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalArgumentException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (NoSuchMethodException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (SecurityException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}			
-				} catch (InvalidCritterException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		try {
+			String[] commands = input.split(" ");
+
+			for (String command : commands) {
+				command.trim();
 			}
-			break;
-		case "make":
-			int count = 1;
-			if(commands.length > 2){
-				count = Integer.parseInt(commands[2]);
-			}
-			while(count > 0){
-				count--;
-				try {
-					Critter.makeCritter(commands[1]);
-				} catch (InvalidCritterException e) {
-					//TODO this catch block
-				}
-			}
-			break;
-		case "step":
-			count = 1;
-			if (commands.length > 1){
-				count = Integer.parseInt(commands[1]);
-			}
-			while (count > 0){
-				count--;
+
+			switch (commands[0]) {
+			case "s": // TODO: REMOVE
 				Critter.worldTimeStep();
+				Critter.displayWorld();
+				break;
+			case "quit":
+				if (commands.length > 1)
+					throw new IllegalArgumentException();
+				quit = true;
+				break;
+			case "show":
+				if (commands.length > 1)
+					throw new IllegalArgumentException();
+				Critter.displayWorld();
+				break;
+			case "seed":
+				if (commands.length > 2)
+					throw new IllegalArgumentException();
+				Critter.setSeed(Long.parseLong(commands[1]));
+				break;
+			case "stats":
+				if(commands.length > 2) throw new IllegalArgumentException();
+				List<Critter> instances = Critter.getInstances(commands[1]);
+				if (instances.size() < 1)
+					return;
+				Critter c = instances.get(0);
+				Class<?>[] types = { List.class };
+				c.getClass().getMethod("runStats", types).invoke(c, instances);
+				break;
+			case "make":
+				int count = 1;
+				if(commands.length > 3) throw new IllegalArgumentException();
+				if (commands.length > 2) {
+					count = Integer.parseInt(commands[2]);
+				}
+				while (count > 0) {
+					count--;
+					Critter.makeCritter(commands[1]);
+				}
+				break;
+			case "step":
+				count = 1;
+				if(commands.length > 2) throw new IllegalArgumentException();
+				if (commands.length > 1) {
+					count = Integer.parseInt(commands[1]);
+				}
+				while (count > 0) {
+					count--;
+					Critter.worldTimeStep();
+				}
+				break;
+			default:
+				throw new IllegalArgumentException();
 			}
-			break;
+		} catch (Exception e) {
+			System.out.println("error processing: " + input);
+		} catch (Error e){
+			System.out.println("error processing: " + input);
 		}
 	}
-	
-	
+
 }
