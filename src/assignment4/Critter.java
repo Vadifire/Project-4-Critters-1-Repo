@@ -154,12 +154,20 @@ public abstract class Critter {
 	 * @param critter_class_name
 	 * @throws InvalidCritterException
 	 */
-	public static void makeCritter(String critter_class_name) throws InvalidCritterException, NoClassDefFoundError, Exception {
-		Critter c = (Critter) Class.forName(myPackage + "." + critter_class_name).newInstance();
-		c.x_coord = Critter.getRandomInt(Params.world_width);
-		c.y_coord = Critter.getRandomInt(Params.world_height);
-		c.energy = Params.start_energy;
-		critters.add(c);
+	public static void makeCritter(String critter_class_name) throws InvalidCritterException{
+		Critter c;
+		try{
+			c = (Critter) Class.forName(myPackage + "." + critter_class_name).newInstance();
+			c.x_coord = Critter.getRandomInt(Params.world_width);
+			c.y_coord = Critter.getRandomInt(Params.world_height);
+			c.energy = Params.start_energy;
+			critters.add(c);
+		}catch(Error e){
+			throw new InvalidCritterException(critter_class_name);
+		}catch(Exception e){
+			throw new InvalidCritterException(critter_class_name);
+		}
+		
 
 	}
 
@@ -372,18 +380,9 @@ public abstract class Critter {
 			if (m1.energy < 1 || m2.energy < 1) {
 				return;
 			}
-			if (m1.x_coord != m2.x_coord || m1.y_coord != m2.y_coord) { // Make
-																		// sure
-																		// that
-																		// m1
-																		// and
-																		// m2
-																		// are
-																		// still
-																		// in
-																		// the
-																		// same
-																		// location
+			
+			//Make sure that m1 and m2 are still in the same location
+			if (m1.x_coord != m2.x_coord || m1.y_coord != m2.y_coord) { 
 				return;
 			}
 			int oldX_m1 = m1.x_coord;
@@ -403,25 +402,12 @@ public abstract class Critter {
 				}
 			}
 
-			if (m1.x_coord != m2.x_coord || m1.y_coord != m2.y_coord) { // Make
-																		// sure
-																		// that
-																		// m1
-																		// and
-																		// m2
-																		// are
-																		// still
-																		// in
-																		// the
-																		// same
-																		// location
+			/*Make sure m1 and m2 are still in the same location*/
+			if (m1.x_coord != m2.x_coord || m1.y_coord != m2.y_coord) { 
 				return;
 			}
-			if (m1.x_coord != oldX_m1 || m1.y_coord != oldY_m1) { // In this
-																	// case, m1
-																	// and m2
-																	// have both
-																	// moved.
+			/*In this case, m1 and m2 have both moved*/
+			if (m1.x_coord != oldX_m1 || m1.y_coord != oldY_m1) {
 				m1.x_coord = oldX_m1;
 				m1.y_coord = oldY_m1;
 				m1.energy = preEnergy; // Cancel m1 movement
@@ -436,9 +422,8 @@ public abstract class Critter {
 				}
 			}
 
-			if (m1.energy < 1 || m2.energy < 1) { // Must be checked in case
-													// failed movement due to
-													// other critter
+			/*Must be checked in case failed movement due to other critter*/
+			if (m1.energy < 1 || m2.energy < 1) {
 				return;
 			}
 

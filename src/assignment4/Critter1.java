@@ -20,7 +20,7 @@ package assignment4;
 public class Critter1 extends Critter{
 
 	@Override
-	public String toString() { return "S"; }
+	public String toString() { return "1"; }
 		
 	@Override
 	public void doTimeStep() {

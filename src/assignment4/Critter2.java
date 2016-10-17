@@ -27,7 +27,7 @@ public class Critter2 extends Critter{
 
 	boolean hasWalked;
 	@Override
-	public String toString() { return "I"; }
+	public String toString() { return "2"; }
 	
 	
 	public Critter2(){
