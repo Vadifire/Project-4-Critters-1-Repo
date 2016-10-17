@@ -40,6 +40,7 @@ public class Critter1 extends Critter{
 		}
 	}
 
+	@Override
 	/**
 	 * Critter1 will only fight algae.
 	 */

@@ -67,7 +67,8 @@ public class Critter2 extends Critter{
 		}
 		
 	}
-
+	
+	@Override
 	/**
 	 * Critter2 will always fight Algae or if it is forced to (has already moved).
 	 * Critter2 will choose to run if its energy is lower than "energyToFight"
