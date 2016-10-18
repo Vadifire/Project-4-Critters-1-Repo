@@ -27,7 +27,6 @@ public abstract class Critter {
 	private static String myPackage;
 	private static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
-	private static HashSet<Critter> critters = new HashSet<Critter>();
 	private static LinkedList<Conflict> conflicts = new LinkedList<Conflict>();
 
 	// Gets the package name. This assumes that Critter and its subclasses are
@@ -181,7 +180,7 @@ public abstract class Critter {
 			c.x_coord = Critter.getRandomInt(Params.world_width);
 			c.y_coord = Critter.getRandomInt(Params.world_height);
 			c.energy = Params.start_energy;
-			critters.add(c);
+			population.add(c);
 		}catch(Error e){
 			throw new InvalidCritterException(critter_class_name);
 		}catch(Exception e){
@@ -201,7 +200,7 @@ public abstract class Critter {
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		List<Critter> result = new java.util.ArrayList<Critter>();
-		for (Critter c : critters) {
+		for (Critter c : population) {
 			try {
 				if (Class.forName(myPackage + "." + critter_class_name).isInstance(c)) {
 					result.add(c);
@@ -299,7 +298,7 @@ public abstract class Critter {
 	 * Clear the world of all critters, dead and alive
 	 */
 	public static void clearWorld() {
-		Iterator<Critter> it = critters.iterator();
+		Iterator<Critter> it = population.iterator();
 		while (it.hasNext()) {
 			Critter c = it.next();
 			it.remove();
@@ -313,14 +312,14 @@ public abstract class Critter {
 	 */
 	public static void worldTimeStep() {
 
-		for (Critter c : critters) { // Each critter does their time step
+		for (Critter c : population) { // Each critter does their time step
 			c.hasMoved = false;
 			c.doTimeStep();
 		}
 
-		for (Critter c : critters) { // Add a conflict for each critter in the
+		for (Critter c : population) { // Add a conflict for each critter in the
 										// same location
-			for (Critter other : critters) {
+			for (Critter other : population) {
 				if (c != other && c.x_coord == other.x_coord && c.y_coord == other.y_coord) {
 					conflicts.add(new Conflict(c, other));
 				}
@@ -336,13 +335,13 @@ public abstract class Critter {
 			a.setEnergy(Params.start_energy);
 			a.setX_coord(Critter.getRandomInt(Params.world_width));
 			a.setY_coord(Critter.getRandomInt(Params.world_height));
-			critters.add(a);
+			population.add(a);
 		}
 
-		critters.addAll(babies);
+		population.addAll(babies);
 		babies.clear();
 
-		Iterator<Critter> it = critters.iterator();
+		Iterator<Critter> it = population.iterator();
 		while (it.hasNext()) { // cull the dead critters
 			Critter c = it.next();
 			c.energy -= Params.rest_energy_cost;
@@ -365,7 +364,7 @@ public abstract class Critter {
 				critterChars[i][j] = ' ';
 			}
 		}
-		for (Critter c : critters) {
+		for (Critter c : population) {
 			critterChars[c.x_coord][c.y_coord] = c.toString().charAt(0);
 		}
 
@@ -429,7 +428,7 @@ public abstract class Critter {
 			boolean m1Fight = m1.fight(m2.toString());
 			boolean m2Fight = m2.fight(m1.toString());
 
-			for (Critter c : critters) { // Check to see if m1 has run into a
+			for (Critter c : population) { // Check to see if m1 has run into a
 											// critter at potential new location
 				if ((c.x_coord == m1.x_coord || c.y_coord == m1.y_coord) && c != m1) {
 					m1.x_coord = oldX_m1;
@@ -449,7 +448,7 @@ public abstract class Critter {
 				m1.energy = preEnergy; // Cancel m1 movement
 				return;
 			}
-			for (Critter c : critters) { // Check to see if m2 has run into a
+			for (Critter c : population) { // Check to see if m2 has run into a
 											// critter at potential new location
 				if ((c.x_coord == m2.x_coord || c.y_coord == m1.y_coord) && c != m2) {
 					m2.x_coord = oldX_m2;
