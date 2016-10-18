@@ -37,6 +37,7 @@ public class Controller {
 	public void promptInput() {
 		System.out.print("critters>");
 		String input = keyboard.nextLine();
+		boolean commandFound = true;
 
 		try {
 			String[] commands = input.split(" ");
@@ -97,10 +98,14 @@ public class Controller {
 				}
 				break;
 			default:
+				commandFound = false;
 				throw new IllegalArgumentException();
 			}
 		} catch (Exception e) {
-			System.out.println("error processing: " + input);
+			if (commandFound == true)
+				System.out.println("error processing: " + input);
+			else
+				System.out.println("invalid command: " + input);
 		} catch (Error e){
 			System.out.println("error processing: " + input);
 		}
