@@ -463,8 +463,8 @@ public abstract class Critter {
 				return;
 			}
 
-			int roll1 = m1Fight ? Critter.getRandomInt(m1.energy) : 0;
-			int roll2 = m2Fight ? Critter.getRandomInt(m2.energy) : 0;
+			int roll1 = m1Fight ? Critter.getRandomInt(m1.energy+1) : 0;
+			int roll2 = m2Fight ? Critter.getRandomInt(m2.energy+1) : 0;
 			if (roll1 > roll2) {
 				m1.energy += m2.energy / 2;
 				m2.energy = 0;
