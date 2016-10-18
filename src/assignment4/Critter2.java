@@ -55,6 +55,8 @@ public class Critter2 extends Critter{
 				child.moveChance = 100;
 			else if (child.moveChance < 0)
 				child.moveChance = 0;
+			if (child.energyToFight < 0)
+				child.energyToFight = 0;
 			reproduce(child, Critter.getRandomInt(8));
 		}
 		
