@@ -72,7 +72,6 @@ public class Main {
         
         Controller controller = new Controller(kb);
         
-        
         while (!controller.quit){
         	controller.promptInput();
         }

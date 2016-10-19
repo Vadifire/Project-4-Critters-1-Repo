@@ -317,19 +317,46 @@ public abstract class Critter {
 			c.doTimeStep();
 		}
 
-		for (Critter c : population) { // Add a conflict for each critter in the
-										// same location
+		for (Critter c : population) { // Add a conflict for each critter in the same location
 			for (Critter other : population) {
 				if (c != other && c.x_coord == other.x_coord && c.y_coord == other.y_coord) {
 					conflicts.add(new Conflict(c, other));
 				}
 			}
 		}
-
 		while (!conflicts.isEmpty()) { // Solve all conflicts
 			conflicts.poll().resolveConflict();
 		}
+		int unresolvedConflicts = 0;
+		for (Critter c : population) { // Add a conflict for each critter in the same location
+			for (Critter other : population) {
+				if (c != other && c.x_coord == other.x_coord && c.y_coord == other.y_coord) {
+					if (c.energy > 0 && other.energy > 0){
+						System.out.println("A CONFLICT WAS NOT RESOLVED.");
+						unresolvedConflicts++;
+					}
+				}
+			}
+		}
+		System.out.println("There were "+unresolvedConflicts+" unresolved conflicts.");
+		
+		int[][] emptySpaces =  new int[Params.world_width][Params.world_height];
+		for (Critter c: population){
+			emptySpaces[c.x_coord][c.y_coord] = 1;
+		}
+		int emptySpaceCount = 0;
+		for (int i = 0; i < Params.world_width; i++){
+			for (int j = 0; j < Params.world_height; j++){
+				if (emptySpaces[i][j] == 0)
+					emptySpaceCount++;
+			}
+		}
+		System.out.println(emptySpaceCount+" spaces are unoccupied.");
 
+		for (Critter c : population) { //Deduct Rest Energy
+			c.energy -= Params.rest_energy_cost;
+		}
+		
 		for (int i = 0; i < Params.refresh_algae_count; i++) {
 			Algae a = new Algae();
 			a.setEnergy(Params.start_energy);
@@ -344,7 +371,6 @@ public abstract class Critter {
 		Iterator<Critter> it = population.iterator();
 		while (it.hasNext()) { // cull the dead critters
 			Critter c = it.next();
-			c.energy -= Params.rest_energy_cost;
 			if (c.getEnergy() <= 0) {
 				it.remove();
 			}

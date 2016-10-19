@@ -45,37 +45,44 @@ public class Controller {
 			for (String command : commands) {
 				command.trim();
 			}
-
-			switch (commands[0]) {
-			case "s": // TODO: REMOVE
-				Critter.worldTimeStep();
-				Critter.displayWorld();
-				break;
-			case "quit":
+			
+			if (commands[0].equals("quit")){
 				if (commands.length > 1)
 					throw new IllegalArgumentException();
 				quit = true;
-				break;
-			case "show":
+			}
+			else if (commands[0].equals("show")){
 				if (commands.length > 1)
 					throw new IllegalArgumentException();
 				Critter.displayWorld();
-				break;
-			case "seed":
+			}
+			else if (commands[0].equals("seed")){
 				if (commands.length > 2)
 					throw new IllegalArgumentException();
 				Critter.setSeed(Long.parseLong(commands[1]));
-				break;
-			case "stats":
+			}
+			else if (commands[0].equals("stats")){
 				if(commands.length > 2) throw new IllegalArgumentException();
 				List<Critter> instances = Critter.getInstances(commands[1]);
-				if (instances.size() < 1)
-					return;
-				Critter c = instances.get(0);
+				
+				String myPackage = Critter.class.getPackage().toString().split(" ")[1];
+				
+				Class<?> c = Class.forName(myPackage+"."+commands[1]);
 				Class<?>[] types = { List.class };
-				c.getClass().getMethod("runStats", types).invoke(c, instances);
-				break;
-			case "make":
+				c.getMethod("runStats", types).invoke(c, instances);
+			}
+			
+			else if (commands[0].equals("energy")){
+				if(commands.length > 2) throw new IllegalArgumentException();
+				List<Critter> instances = Critter.getInstances(commands[1]);
+				int totalEnergy = 0;
+				for (Critter c : instances){
+					totalEnergy+=c.getEnergy();
+				}
+				System.out.println("Total system energy for "+instances.size()+" "+commands[1]+"s: "+totalEnergy);
+			}
+			
+			else if (commands[0].equals("make")){
 				int count = 1;
 				if(commands.length > 3) throw new IllegalArgumentException();
 				if (commands.length > 2) {
@@ -85,9 +92,9 @@ public class Controller {
 					count--;
 					Critter.makeCritter(commands[1]);
 				}
-				break;
-			case "step":
-				count = 1;
+			}
+			else if (commands[0].equals("step")){
+				int count = 1;
 				if(commands.length > 2) throw new IllegalArgumentException();
 				if (commands.length > 1) {
 					count = Integer.parseInt(commands[1]);
@@ -96,8 +103,8 @@ public class Controller {
 					count--;
 					Critter.worldTimeStep();
 				}
-				break;
-			default:
+			}
+			else{
 				commandFound = false;
 				throw new IllegalArgumentException();
 			}

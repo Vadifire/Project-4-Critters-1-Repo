@@ -49,8 +49,8 @@ public class Critter2 extends Critter{
 		
 		if (getEnergy() > Params.start_energy) { //Reproduces if Critter2 is doing well.
 			Critter2 child = new Critter2();
-			child.energyToFight = energyToFight -10 + Critter.getRandomInt(20); //+/- 10 energyToFight from parent
-			child.moveChance = moveChance -10 + Critter.getRandomInt(20); //+/- 10 moveChance from parent
+			child.energyToFight = energyToFight -10 + Critter.getRandomInt(21); //+/- 10 energyToFight from parent
+			child.moveChance = moveChance -10 + Critter.getRandomInt(21); //+/- 10 moveChance from parent
 			if (child.moveChance > 100)
 				child.moveChance = 100;
 			else if (child.moveChance < 0)
@@ -76,7 +76,7 @@ public class Critter2 extends Critter{
 				return true; //No choice but to fight, cannot run.
 			}
 			else{
-				if (getEnergy() > energyToFight){ //We feel strong, lets fight.
+				if (getEnergy() >= energyToFight){ //We feel strong, lets fight.
 					return true;
 				}
 				else{
@@ -95,9 +95,13 @@ public class Critter2 extends Critter{
 			totalEnergyToFight+=c2.energyToFight;
 			totalMoveChance+=c2.moveChance;
 		}
-		System.out.println(critter2s.size() + 
-				" total Critter2s, average energyToFight: "+(totalEnergyToFight/critter2s.size())+
-				", average moveChance: "+(totalMoveChance/critter2s.size()));
+		if (critter2s.size() > 0){
+			System.out.println("There are "+critter2s.size() + 
+					" total Critter2s. Average energyToFight: "+(totalEnergyToFight/critter2s.size())+
+					", Average moveChance: "+(totalMoveChance/critter2s.size()));
+		}
+		else
+			System.out.println("There are "+critter2s.size() + " total Critter2s.");
 	}
 
 

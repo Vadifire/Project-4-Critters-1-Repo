@@ -29,6 +29,11 @@ public class Critter4 extends Critter {
 	private int chanceOfInjury;
 	private int recoveryPhase;
 	
+	@Override
+	public String toString() {
+		return "4";
+	}
+	
 	public Critter4(){
 		sustainedInjury = false;
 		chanceOfInjury = Critter.getRandomInt(100);
@@ -46,7 +51,11 @@ public class Critter4 extends Critter {
 				this.walk(Critter.getRandomInt(7));
 				if(this.getEnergy() > 100){
 					Critter4 child = new Critter4();
-					child.chanceOfInjury = this.chanceOfInjury;
+					child.chanceOfInjury = this.chanceOfInjury-10+Critter.getRandomInt(21);
+					if (child.chanceOfInjury > 100)
+						child.chanceOfInjury = 100;
+					else if (child.chanceOfInjury < 0)
+						child.chanceOfInjury = 0;
 					this.reproduce(child, Critter.getRandomInt(7));
 				}
 			}
@@ -82,9 +91,15 @@ public class Critter4 extends Critter {
 	public static void runStats(java.util.List<Critter> critters) {
 		System.out.print("There are " + critters.size());
 		int numHurt = 0;
+		int totalInjuryChance = 0;
 		for(Critter c : critters){
 			if(((Critter4) c).sustainedInjury) numHurt++;
+			totalInjuryChance+= ((Critter4) c).chanceOfInjury;
 		}
-		System.out.println(" Critter 4s, " + numHurt + " of which have sustained a serious injury.");
+		System.out.print(" Critter 4s, " + numHurt + " of which have sustained a serious injury.");
+		if (critters.size()>0)
+			System.out.println(" On average, the chance of injury for Critter 4 is "+(totalInjuryChance/critters.size())+"%");			
+		else
+			System.out.println();
 	}
 }
