@@ -150,12 +150,14 @@ public abstract class Critter {
 		if (energy < Params.min_reproduce_energy) {
 			return;
 		}
+		System.out.println("Reproducing. Parent energy: "+energy);
 		offspring.energy = this.energy / 2;
 		energy = energy / 2 + energy % 2;
 		offspring.x_coord = x_coord;
 		offspring.y_coord = y_coord;
 		offspring.move(direction);
 		babies.add(offspring);
+		System.out.println("Reproduction Complete: Parent Energy: "+energy+", Child Energy: "+offspring.energy);
 	}
 
 	public abstract void doTimeStep();
@@ -206,8 +208,7 @@ public abstract class Critter {
 					result.add(c);
 				}
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new InvalidCritterException(critter_class_name);
 			}
 		}
 		return result;
@@ -327,7 +328,7 @@ public abstract class Critter {
 		while (!conflicts.isEmpty()) { // Solve all conflicts
 			conflicts.poll().resolveConflict();
 		}
-		int unresolvedConflicts = 0;
+		/*int unresolvedConflicts = 0;
 		for (Critter c : population) { // Add a conflict for each critter in the same location
 			for (Critter other : population) {
 				if (c != other && c.x_coord == other.x_coord && c.y_coord == other.y_coord) {
@@ -338,9 +339,9 @@ public abstract class Critter {
 				}
 			}
 		}
-		System.out.println("There were "+unresolvedConflicts+" unresolved conflicts.");
+		System.out.println("There were "+unresolvedConflicts+" unresolved conflicts.");*/
 		
-		int[][] emptySpaces =  new int[Params.world_width][Params.world_height];
+		/*int[][] emptySpaces =  new int[Params.world_width][Params.world_height];
 		for (Critter c: population){
 			emptySpaces[c.x_coord][c.y_coord] = 1;
 		}
@@ -351,7 +352,7 @@ public abstract class Critter {
 					emptySpaceCount++;
 			}
 		}
-		System.out.println(emptySpaceCount+" spaces are unoccupied.");
+		System.out.println(emptySpaceCount+" spaces are unoccupied.");*/
 
 		for (Critter c : population) { //Deduct Rest Energy
 			c.energy -= Params.rest_energy_cost;
@@ -490,15 +491,16 @@ public abstract class Critter {
 
 			int roll1 = m1Fight ? Critter.getRandomInt(m1.energy+1) : 0;
 			int roll2 = m2Fight ? Critter.getRandomInt(m2.energy+1) : 0;
+			//System.out.println("Resolving Conflict. m1 has "+m1.energy+" and m2 has "+m2.energy);
 			if (roll1 > roll2) {
 				m1.energy += m2.energy / 2;
 				m2.energy = 0;
 			}
-			if (roll2 > roll1) {
+			else{
 				m2.energy += m1.energy / 2;
 				m1.energy = 0;
 			}
-			// System.out.println("Conflict resolved.");
+			//System.out.println("Conflict resolved. m1 has "+m1.energy+" and m2 has "+m2.energy);
 		}
 	}
 
