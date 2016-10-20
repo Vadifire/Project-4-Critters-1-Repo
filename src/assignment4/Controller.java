@@ -64,9 +64,9 @@ public class Controller {
 			else if (commands[0].equals("stats")){
 				if(commands.length > 2) throw new IllegalArgumentException();
 				List<Critter> instances = Critter.getInstances(commands[1]);
-				
+				if (commands[1].equals("Critter"))
+					throw new InvalidCritterException("Critter");
 				String myPackage = Critter.class.getPackage().toString().split(" ")[1];
-				
 				Class<?> c = Class.forName(myPackage+"."+commands[1]);
 				Class<?>[] types = { List.class };
 				c.getMethod("runStats", types).invoke(c, instances);
