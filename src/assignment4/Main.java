@@ -138,7 +138,7 @@ public class Main {
     				c.getMethod("runStats", types).invoke(c, instances);
     			}
     			
-    			else if (commands[0].equals("energy")){
+    			/*else if (commands[0].equals("energy")){
     				if(commands.length > 2) throw new IllegalArgumentException();
     				List<Critter> instances = Critter.getInstances(commands[1]);
     				int totalEnergy = 0;
@@ -146,7 +146,7 @@ public class Main {
     					totalEnergy+=c.getEnergy();
     				}
     				System.out.println("Total system energy for "+instances.size()+" "+commands[1]+"s: "+totalEnergy);
-    			}
+    			}*/
     			
     			else if (commands[0].equals("make")){
     				int count = 1;
